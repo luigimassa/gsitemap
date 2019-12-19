@@ -360,6 +360,21 @@ class Gsitemap extends Module
                     return false;
                 }
             }
+            //brands pages
+            if ($meta['page']=='manufacturer') {
+                $mns = Manufacturer::getLiteManufacturersList($lang['id_lang']);
+                
+                foreach ($mns as $mn) {
+                    if (!$this->addLinkToSitemap($link_sitemap, array(
+                        'type' => 'meta',
+                        'page' => $mn['name'],
+                        'link' => $mn['link'],
+                        'image' => false,
+                    ), $lang['iso_code'], $index, $i, $meta['id_meta'])) {
+                        return false;
+                    }
+                }
+            }
         }
 
         return true;
