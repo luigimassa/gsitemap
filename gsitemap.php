@@ -360,6 +360,21 @@ class Gsitemap extends Module
                     return false;
                 }
             }
+            //brands pages
+            if ($meta['page']=='manufacturer') {
+                $mns = \Manufacturer::getLiteManufacturersList($lang['id_lang']);
+            
+                foreach ($mns as $mn) {
+                    if (!$this->addLinkToSitemap($link_sitemap, array(
+                        'type' => 'meta',
+                        'page' => $mn['name'],
+                        'link' => $mn['link'],
+                        'image' => false,
+                    ), $lang['iso_code'], $index, $i, $meta['id_meta'])) {
+                        return false;
+                    }
+                }
+            }
         }
 
         return true;
@@ -391,7 +406,7 @@ class Gsitemap extends Module
             $url = $link->getProductLink($product, $product->link_rewrite, htmlspecialchars(strip_tags($product->category)), $product->ean13, (int) $lang['id_lang'], (int) $this->context->shop->id, 0);
 
             $images_product = array();
-            foreach($product->getImages($lang) as $id_image) {
+            foreach ($product->getImages($lang) as $id_image) {
                 if (isset($id_image['id_image'])) {
                     $image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id . '-' . (int) $id_image['id_image'], ImageType::getFormattedName('large'));
                     $image_link = (!in_array(rtrim(Context::getContext()->shop->virtual_uri, '/'), explode('/', $image_link))) ? str_replace(array(
@@ -675,7 +690,7 @@ class Gsitemap extends Module
             if (isset($file['images']) && $file['images']) {
                 $images = array_merge($images, $file['images']);
             }
-            foreach($images as $image) {
+            foreach ($images as $image) {
                 $this->addSitemapNodeImage($write_fd, htmlspecialchars(strip_tags($image['link'])), isset($image['title_img']) ? htmlspecialchars(str_replace(array(
                     "\r\n",
                     "\r",
